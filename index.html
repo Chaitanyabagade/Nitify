@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Notification Test</title>
 </head>
 <body>
 
 <h2>Firebase Notification Test</h2>
+
+<p><b>Device Token:</b></p>
+<textarea id="tokenBox" style="width:100%;height:120px"></textarea>
+
+<br><br>
+
 <button onclick="sendNotification()">Send Notification</button>
 
 <script type="module">
@@ -26,7 +33,7 @@ const messaging = getMessaging(app);
 
 let token="";
 
-navigator.serviceWorker.register("firebase-messaging-sw.js")
+navigator.serviceWorker.register("/firebase-messaging-sw.js")
 .then(async (registration)=>{
 
 const permission=await Notification.requestPermission();
@@ -38,7 +45,7 @@ vapidKey:"YOUR_VAPID_KEY",
 serviceWorkerRegistration:registration
 });
 
-console.log("Token:",token);
+document.getElementById("tokenBox").value=token;
 
 }
 
