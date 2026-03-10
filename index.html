@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Notification Test</title>
+</head>
+<body>
+
+<h2>Firebase Notification Test</h2>
+<button onclick="sendNotification()">Send Notification</button>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCGdYfElAdqFh35vZIS-yjqXC2dLFuR7y0",
+  authDomain: "test-d4582.firebaseapp.com",
+  projectId: "test-d4582",
+  messagingSenderId: "866691320402",
+  appId: "1:866691320402:web:a4ccee9ed561a36bb3ed8b"
+};
+
+const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
+
+let token="";
+
+navigator.serviceWorker.register("firebase-messaging-sw.js")
+.then(async (registration)=>{
+
+const permission=await Notification.requestPermission();
+
+if(permission==="granted"){
+
+token=await getToken(messaging,{
+vapidKey:"YOUR_VAPID_KEY",
+serviceWorkerRegistration:registration
+});
+
+console.log("Token:",token);
+
+}
+
+});
+
+window.sendNotification=async function(){
+
+fetch("https://fcm.googleapis.com/fcm/send",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"Authorization":"key=YOUR_SERVER_KEY"
+},
+body:JSON.stringify({
+to:token,
+notification:{
+title:"Hello 🚀",
+body:"Test notification"
+}
+})
+});
+
+}
+
+</script>
+
+</body>
+</html>
